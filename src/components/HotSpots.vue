@@ -1,22 +1,18 @@
 <template>
   <div class="hotspots">
-    <div class="test_dots">{{ dots }}</div>
     <div class="img__container" >
       <img class="img-fluid hotspots__image" style=""
         :src="image"
         alt="" @click="addHotSpots"
         :class="{editing: editMode}"
       >
-      <div class="test dddkjsdk">
-          kklk
       <div class="hotspot__container text-center" v-for="(dot, i) in dots"
         :class="'dot-' + i"
         :key="dot.i"
         :style="'top:' + dot.posY +'%;left:' + dot.posX + '%;'"
         @click="showHint(dot, i)"
         @mouseenter="showHintOnEnter(dot, i)"
-        @mouseleave="showHintOnLeave(dot)"
-      > 
+        @mouseleave="showHintOnLeave(dot)"> 
         <div class="text-center hotspot hotspot_dot" 
             v-if="dot.type === 'dot'" :style="'background:' + dotsColor + ';'"
             @click="clickDot(dot, i)"
@@ -49,7 +45,6 @@
           </template>     
         </div>
       </div>
-    </div>
     </div>
   </div>
 </template>
@@ -175,24 +170,16 @@ export default {
   methods: {
     checkHintPosition(dot, i) {
       if (!dot.show_hint) return
-      // const image = this.$refs.image
       const image = document.querySelector('.hotspots__image')
       if (!image) return
       let imgPos = image.getBoundingClientRect()
-      // if (!this.$refs['dot']) return
-      
-      // let dotObj = this.$refs[`dot`][i] 
+
       let dotObj = document.querySelector(`.dot-${i}`)
 
       if (!dotObj) return 
       let dotPos = dotObj.getBoundingClientRect()
-      // check left or right
 
       let side = dot.posX <= 50 ? 'left' : 'right'
-
-      // if (!this.$refs['hint']) return 
-              
-      // let hint = this.$refs[`hint`][i]
       let hint = document.querySelector(`.hint-${i}`)
 
       if (!hint) return
