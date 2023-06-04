@@ -1,10 +1,17 @@
 {
-  "name": "test",
+  "name": "hot-spot",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "main": "dist/hot-spot.common.js",
+  "module": "dist/hot-spot.umd.min.js",
+  "author": "Liliia Solohub",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build-lib": "vue-cli-service build --target lib --name hot-spot src/index.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

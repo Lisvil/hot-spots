@@ -1,20 +1,18 @@
 <template>
   <div class="hotspots">
     <div class="img__container" >
-      <img class="img-fluid" style=""
+      <img class="img-fluid hotspots__image" style=""
         :src="image"
         alt="" @click="addHotSpots"
-        ref="image"
         :class="{editing: editMode}"
       >
       <div class="hotspot__container text-center" v-for="(dot, i) in dots"
-        ref="dot"
+        :class="'dot-' + i"
         :key="dot.i"
         :style="'top:' + dot.posY +'%;left:' + dot.posX + '%;'"
         @click="showHint(dot, i)"
         @mouseenter="showHintOnEnter(dot, i)"
-        @mouseleave="showHintOnLeave(dot)"
-      > 
+        @mouseleave="showHintOnLeave(dot)"> 
         <div class="text-center hotspot hotspot_dot" 
             v-if="dot.type === 'dot'" :style="'background:' + dotsColor + ';'"
             @click="clickDot(dot, i)"
@@ -37,7 +35,7 @@
         </div>
         <div v-show="!editMode && dot.show_hint && dot.text" 
           class="hotspot__hint"
-          ref="hint"
+          :class="'hint-' + i"
           :style="hintStyleObj"> 
           <template v-if="!customHint"> {{ dot.text }} </template>     
           <template v-else>
@@ -150,6 +148,9 @@ export default {
     },
   },
   created() {
+    if (this.data) {
+      this.dots = JSON.parse(JSON.stringify(this.data))
+    }
     if (this.hintStyle && Object.keys(this.hintStyle).length) {
         this.hintStyleObj = JSON.parse(JSON.stringify(this.hintStyle))
       }
@@ -169,20 +170,18 @@ export default {
   methods: {
     checkHintPosition(dot, i) {
       if (!dot.show_hint) return
-      const image = this.$refs.image
+      const image = document.querySelector('.hotspots__image')
+      if (!image) return
       let imgPos = image.getBoundingClientRect()
-      if (!this.$refs['dot']) return
-      
-      let dotObj = this.$refs[`dot`][i]
+
+      let dotObj = document.querySelector(`.dot-${i}`)
+
       if (!dotObj) return 
       let dotPos = dotObj.getBoundingClientRect()
-      // check left or right
 
       let side = dot.posX <= 50 ? 'left' : 'right'
+      let hint = document.querySelector(`.hint-${i}`)
 
-      if (!this.$refs['hint']) return 
-              
-      let hint = this.$refs[`hint`][i]
       if (!hint) return
       setTimeout(() => {
         let move = null
@@ -215,7 +214,8 @@ export default {
       else if (!this.editMode && this.onImageClick && this.dots.length) {
         this.showHintOnImageClick()
       } else if (this.editMode){
-        const image = this.$refs.image
+        const image = document.querySelector('.hotspots__image')
+        if (!image) return
         let dot = {
           text: '',
           show_input: false,
@@ -310,7 +310,9 @@ export default {
     },
     addTextToHint(dot, i) {
       if (this.customHint) {
-        let hint = this.$refs['hint'][i]
+        // let hint = this.$refs['hint'][i]
+        let hint = document.querySelector(`.hint-${i}`)
+
         if (hint) {
           let textContainer = hint.querySelector('.hint__text-content')
           if (textContainer) {
@@ -322,7 +324,7 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="css" >
 .hotspots {
   display: flex;
   justify-content: center;
@@ -331,34 +333,34 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    cursor: pointer;
-  }
+}
+.img__container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
 }
 .editing {
   filter: brightness(0.5);
 }
 .hotspot__container {
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    .hotspot {
-      text-align: center;
-      opacity: 0.9;
-      background: #fff;
-    }
-  }
-.hotspot__container:after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      transform: scale(2.3);
+  width: 20px;
+  height: 20px;
+  position: absolute;
+}
+.hotspot {
+  text-align: center;
+  opacity: 0.9;
+  background: #fff;
+}
+.hotspot__container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: scale(2.3);
 }  
 .hotspot__settings{
   position: absolute;
@@ -370,41 +372,41 @@ export default {
   padding: 15px;
   transform: translate(-50%, -50%);
   z-index: 8;
-  span {
-    cursor: pointer;
-    background-color: #5395ff;
-    color: #fff;
-    font-size: 14px;
-    position: absolute;
-    padding: 2px 5px;
-    border-radius: 50%;
-    right: -8px;
-  }
-  .settings__close{
-    top: -6px;
-  }
-  .settings__text {
-    font-weight: bold;
-    bottom:-6px;
-  }
 } 
+.hotspot__settings span {
+  cursor: pointer;
+  background-color: #5395ff;
+  color: #fff;
+  font-size: 14px;
+  position: absolute;
+  padding: 2px 5px;
+  border-radius: 50%;
+  right: -8px;
+}
+.hotspot__settings .settings__close{
+  top: -6px;
+}
+.hotspot__settings .settings__text {
+  font-weight: bold;
+  bottom:-6px;
+}
 .hotspot__text {
   position: absolute;
   bottom: -70%;
   left: 50%;
   width: max-content;
   transform: translateX(-50%);
-  .hotspot__input {
-    background: #cccccc7d;
-    width: 200px;
-    border: 0;
-    outline: none;
-    padding: 5px;
-    border-radius: 5px;
-    color: #fff;
-  }
-
 } 
+.hotspot__input {
+  background: #cccccc7d;
+  width: 200px;
+  border: 0;
+  outline: none;
+  padding: 5px;
+  border-radius: 5px;
+  color: #fff;
+}
+
 .hotspot_dot {
   border-radius: 50%;
 }
@@ -418,8 +420,9 @@ export default {
   position: relative;
   z-index: 10;
   
-  &::before {
-    content: '';
+}
+.hotspot::before {
+  content: '';
     position: absolute;
     width: 100%;
     height: 100%;
@@ -430,7 +433,6 @@ export default {
     transform: scale(1.5);
     border-radius: inherit;
     animation: animate 1.5s linear infinite alternate; 
-  }
 }
 
 .hotspot__hint {
