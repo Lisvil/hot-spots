@@ -1,9 +1,9 @@
 {
-  "name": "hot-spot",
-  "version": "0.1.0",
+  "name": "vue3-hot-spot",
+  "version": "1.0.0",
   "private": false,
-  "main": "dist/hot-spot.common.js",
-  "module": "dist/hot-spot.umd.min.js",
+  "main": "dist/vue3-hot-spot.common.js",
+  "module": "dist/vue3-hot-spot.umd.min.js",
   "author": "Liliia Solohub",
   "files": [
     "dist"
@@ -11,7 +11,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build-lib": "vue-cli-service build --target lib --name hot-spot src/index.js",
+    "build-lib": "vue-cli-service build --target lib --name vue3-hot-spot src/index.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
