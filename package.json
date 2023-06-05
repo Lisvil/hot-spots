@@ -2,9 +2,11 @@
   "name": "vue3-hot-spot",
   "version": "1.0.0",
   "private": false,
+  "license": "MIT",
   "main": "dist/vue3-hot-spot.common.js",
   "module": "dist/vue3-hot-spot.umd.min.js",
   "author": "Liliia Solohub",
+  "keywords": ["vue", "vue3", "vue-hotspots", "vue3-hot-spot","hotspots", "hotspots"],
   "files": [
     "dist"
   ],
