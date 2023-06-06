@@ -48,7 +48,46 @@
                 :onImageClick="true"
                 :defaultInput="true"
                 :customHint="customHint"
-                @change="changingDots"
+                @changeArr="changingDots"
+                @add="addedDot"
+                @delete="deleteDot"
+                @changeDot="changeDot"
+                @clickDot="clickDot"
+                :dotsColor="dots_bg"
+                :hintBg="bg_color"
+                :hintTextColor="text_color"
+                :hintStyle="hintStyle"
+                :inputStyle="inputStyles"
+                :inputBg="inputBg"
+                :inputTextColor="inputTextColor"
+                :data="dotsArr"
+
+      />
+      <!-- :hintStyle="hintStyle" -->
+      <!-- :inputStyle="inputStyles" -->
+      <!-- :customHint="customHint" -->
+
+    </div>
+    <div> Another container</div>
+    <div>
+      <button class="button" @click="editMode_t=!editMode_t">
+        <template v-if="!editMode_t">
+          Edit mode
+        </template>
+        <template v-if="editMode_t">
+          View mode
+        </template>
+      </button>
+    </div>
+    <div class="container">
+      <HotSpots :image="image" 
+                :edit="editMode_t"
+                :showOnClick="false"
+                :onHover="true"
+                :onImageClick="true"
+                :defaultInput="true"
+                :customHint="customHint"
+                @changeArr="changingDots"
                 @add="addedDot"
                 @delete="deleteDot"
                 @changeDot="changeDot"
@@ -81,6 +120,7 @@ export default {
       image: 'https://cutewallpaper.org/21/nature-mountains-wallpaper/Wallpaper-Nature-Mountains-Lake-Switzerland-Forest-Alps-.jpg',
       img: 'https://n1s1.hsmedia.ru/44/fc/48/44fc4800170256d5e4b8b0a2c7033457/728x485_1_ba47ab3690e4d738ba4818741f9c9a25@2560x1707_0xac120003_3943829481668767955.jpeg',
       editMode: false,
+      editMode_t: false,
       hintStyle: {
         color: '#fff',
         background: '#333',

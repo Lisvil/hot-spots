@@ -1,5 +1,5 @@
 <template>
-  <div class="hotspots">
+  <div class="hotspots" :class="'hotspots_' + id">
     <div class="img__container" >
       <img class="img-fluid hotspots__image" style=""
         :src="image"
@@ -95,6 +95,8 @@ export default {
         background: this.inputBg,
         color: this.inputTextColor
       },
+      id: null,
+      container: null
     }
   },
   computed: {
@@ -148,6 +150,7 @@ export default {
     },
   },
   created() {
+    this.id = Math.floor(Math.random() * 100) + 1;
     if (this.data) {
       this.dots = JSON.parse(JSON.stringify(this.data))
     }
@@ -167,20 +170,24 @@ export default {
       }
     }
   },
+  mounted() {
+    this.container = document.querySelector('.hotspots_' + this.id)
+  },
   methods: {
     checkHintPosition(dot, i) {
       if (!dot.show_hint) return
-      const image = document.querySelector('.hotspots__image')
+      const image = this.container.querySelector('.hotspots__image')
+
       if (!image) return
       let imgPos = image.getBoundingClientRect()
 
-      let dotObj = document.querySelector(`.dot-${i}`)
+      let dotObj = this.container.querySelector(`.dot-${i}`)
 
       if (!dotObj) return 
       let dotPos = dotObj.getBoundingClientRect()
 
       let side = dot.posX <= 50 ? 'left' : 'right'
-      let hint = document.querySelector(`.hint-${i}`)
+      let hint = this.container.querySelector(`.hint-${i}`)
 
       if (!hint) return
       setTimeout(() => {
@@ -198,7 +205,7 @@ export default {
         }
         hint.style.left = move + 'px'
         if (dot.posY >= 50) {
-          let distanceY= imgPos.top - dotPos.top 
+          let distanceY= imgPos.bottom - dotPos.bottom 
           if (distanceY < hint.offsetHeight + 26) {
             let moveY = hint.offsetHeight + 26
             hint.style.top = -moveY + 'px'
@@ -214,7 +221,7 @@ export default {
       else if (!this.editMode && this.onImageClick && this.dots.length) {
         this.showHintOnImageClick()
       } else if (this.editMode){
-        const image = document.querySelector('.hotspots__image')
+        const image = this.container.querySelector('.hotspots__image')
         if (!image) return
         let dot = {
           text: '',
@@ -236,7 +243,7 @@ export default {
           index: this.dots.length - 1,
           obj:  Object.assign({}, dot)
         }
-        this.$emit('change', this.copyDotsArr())
+        this.$emit('changeArr', this.copyDotsArr())
         this.$emit('add', obj)
     } 
     },
@@ -247,7 +254,7 @@ export default {
         }
       this.$emit('delete', obj)
       this.dots.splice(index, 1)
-      this.$emit('change', this.dots)
+      this.$emit('changeArr', this.dots)
     },
     showHintOnImageClick() {
       if (this.dots.find(f => !f.show_hint)) {
@@ -290,7 +297,7 @@ export default {
           obj: Object.assign({}, dot)
         }
       this.$emit('changeDot', obj)
-      this.$emit('change', this.dots)
+      this.$emit('changeArr', this.dots)
 
     },
     clickDot(dot, index) {
@@ -311,7 +318,7 @@ export default {
     addTextToHint(dot, i) {
       if (this.customHint) {
         // let hint = this.$refs['hint'][i]
-        let hint = document.querySelector(`.hint-${i}`)
+        let hint = this.container.querySelector(`.hint-${i}`)
 
         if (hint) {
           let textContainer = hint.querySelector('.hint__text-content')
